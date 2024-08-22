@@ -14,3 +14,4 @@ ytdl-android/src/test
 ytdl-android/.gitignore
 ytdl-android/consumer-rules.pro
 ytdl-android/proguard-rules.pro
+ytdltestapp

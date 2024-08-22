@@ -119,7 +119,11 @@ public class YTDL {
                 cache.clear();
             } catch (Exception e) {
                 cache.clear();
-                callback.onFailure(e);
+                if (Objects.requireNonNull(e.getLocalizedMessage()).contains("No value for videoDetails")) {
+                    callback.onFailure(new Exception("Video not found"));
+                } else {
+                    callback.onFailure(e);
+                }
             }
         }).start();
     }

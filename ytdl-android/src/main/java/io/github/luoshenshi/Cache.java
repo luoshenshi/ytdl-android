@@ -56,6 +56,5 @@ public class Cache {
             cache.values().forEach(future -> future.cancel(false));
         }
         cache.clear();
-        scheduler.shutdown();
     }
 }

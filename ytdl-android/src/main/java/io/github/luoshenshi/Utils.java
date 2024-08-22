@@ -1,7 +1,5 @@
 package io.github.luoshenshi;
 
-import static io.github.luoshenshi.YtdlConstants.client;
-
 import android.os.Build;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,19 +13,20 @@ import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class Utils {
+    private static final OkHttpClient client = new OkHttpClient();
+
     public static Integer parseAbbreviatedNumber(String input) {
         if (input == null || input.isEmpty()) {
             return null;
         }
 
-        // Replace ',' with '.' and remove spaces
         String sanitizedInput = input.replace(",", ".").replace(" ", "");
 
-        // Regular expression to match the number with optional 'M' or 'K'
         Pattern pattern = Pattern.compile("([\\d,.]+)([MK]?)");
         Matcher matcher = pattern.matcher(sanitizedInput);
 
@@ -45,7 +44,6 @@ public class Utils {
                     return (int) Math.round(num);
                 }
             } catch (NumberFormatException e) {
-                // Handle the case where parsing fails
                 return null;
             }
         }
@@ -82,27 +80,17 @@ public class Utils {
     }
 
     public static CompletableFuture<String> request(String url) {
-        Request request = new Request.Builder().url(url).build();
         CompletableFuture<String> future = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             future = new CompletableFuture<>();
         }
 
         CompletableFuture<String> finalFuture = future;
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(new Request.Builder().url(url).build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     finalFuture.completeExceptionally(e);
-                }
-                client.dispatcher().executorService().shutdown();
-                client.connectionPool().evictAll();
-                if (client.cache() != null) {
-                    try {
-                        client.cache().close();
-                    } catch (IOException ioException) {
-                        throw new IllegalArgumentException(ioException.getLocalizedMessage());
-                    }
                 }
             }
 
@@ -117,16 +105,6 @@ public class Utils {
                     } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             finalFuture.completeExceptionally(new IOException("Request failed with status code: " + response.code()));
-                        }
-                    }
-                } finally {
-                    client.dispatcher().executorService().shutdown();
-                    client.connectionPool().evictAll();
-                    if (client.cache() != null) {
-                        try {
-                            client.cache().close();
-                        } catch (IOException ioException) {
-                            throw new Error(ioException);
                         }
                     }
                 }
