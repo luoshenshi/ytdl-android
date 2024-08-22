@@ -421,7 +421,7 @@ public class YTDL {
         return BASE_URL + id + "&hl=" + lang + "&bpctr=" + bpctr + "&has_verified=1";
     }
 
-    private static CompletableFuture<String> getWatchHTMLPageBody(String id) throws Exception {
+    private static CompletableFuture<String> getWatchHTMLPageBody(String id) {
         String url = getWatchHTMLURL(id);
         return cache.getOrSet(url, () -> request(url));
     }
