@@ -36,7 +36,7 @@ public class Cache {
         }
     }
 
-    public CompletableFuture<String> getOrSet(String key, Callable<CompletableFuture<String>> fn) throws Exception {
+    public CompletableFuture<String> getOrSet(String key, Callable<CompletableFuture<String>> fn) {
         CompletableFuture<String> value = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             value = cache.computeIfAbsent(key, k -> {
