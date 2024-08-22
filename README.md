@@ -19,14 +19,14 @@ Include Ytdl-Android in your project using Maven or Gradle.
 <dependency>
     <groupId>io.github.luoshenshi</groupId>
     <artifactId>ytdl-android</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
 ### Gradle (Kotlin)
 
 ```groovy
-implementation("io.github.luoshenshi:ytdl-android:1.0")
+implementation("io.github.luoshenshi:ytdl-android:1.1")
 ```
 
 ## Usage
